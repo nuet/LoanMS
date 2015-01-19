@@ -144,6 +144,102 @@ LOCK TABLES `organization` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `t_loan`
+--
+
+DROP TABLE IF EXISTS `t_loan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_loan` (
+  `loanID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `bankID` bigint(20) DEFAULT NULL,
+  `organizationID` bigint(20) DEFAULT NULL,
+  `loanType` varchar(1000) DEFAULT NULL,
+  `startTime` date DEFAULT NULL,
+  `endTime` date DEFAULT NULL,
+  `total` bigint(20) DEFAULT NULL,
+  `paid` bigint(20) DEFAULT NULL,
+  `residue` bigint(20) DEFAULT NULL,
+  `interest` tinyint(4) DEFAULT NULL,
+  `mortgageType` varchar(1000) DEFAULT NULL,
+  `loanDocID` bigint(20) DEFAULT NULL,
+  `insuranceID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`loanID`),
+  KEY `bankID` (`bankID`),
+  KEY `organizationID` (`organizationID`),
+  KEY `loanDocID` (`loanDocID`),
+  KEY `insuranceID` (`insuranceID`),
+  CONSTRAINT `t_loan_ibfk_1` FOREIGN KEY (`bankID`) REFERENCES `organization` (`organizationID`),
+  CONSTRAINT `t_loan_ibfk_2` FOREIGN KEY (`organizationID`) REFERENCES `organization` (`organizationID`),
+  CONSTRAINT `t_loan_ibfk_3` FOREIGN KEY (`loanDocID`) REFERENCES `t_loan_doc` (`docID`),
+  CONSTRAINT `t_loan_ibfk_4` FOREIGN KEY (`insuranceID`) REFERENCES `t_loan_insurance` (`insuranceID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_loan`
+--
+
+LOCK TABLES `t_loan` WRITE;
+/*!40000 ALTER TABLE `t_loan` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_loan` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_loan_doc`
+--
+
+DROP TABLE IF EXISTS `t_loan_doc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_loan_doc` (
+  `docID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `doc_Name` varchar(1000) DEFAULT NULL,
+  `doc_Size` int(11) DEFAULT NULL,
+  `doc_Date` datetime DEFAULT NULL,
+  `doc_URL` varchar(1000) DEFAULT NULL,
+  `loanID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`docID`),
+  KEY `loanID` (`loanID`),
+  CONSTRAINT `t_loan_doc_ibfk_1` FOREIGN KEY (`loanID`) REFERENCES `t_loan` (`loanID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_loan_doc`
+--
+
+LOCK TABLES `t_loan_doc` WRITE;
+/*!40000 ALTER TABLE `t_loan_doc` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_loan_doc` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_loan_insurance`
+--
+
+DROP TABLE IF EXISTS `t_loan_insurance`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_loan_insurance` (
+  `insuranceID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `companyID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`insuranceID`),
+  KEY `companyID` (`companyID`),
+  CONSTRAINT `t_loan_insurance_ibfk_1` FOREIGN KEY (`companyID`) REFERENCES `organization` (`organizationID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_loan_insurance`
+--
+
+LOCK TABLES `t_loan_insurance` WRITE;
+/*!40000 ALTER TABLE `t_loan_insurance` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_loan_insurance` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `t_message`
 --
 
@@ -262,4 +358,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-01-17 13:55:34
+-- Dump completed on 2015-01-18 20:55:08
