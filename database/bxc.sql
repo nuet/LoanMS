@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.17, for osx10.7 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.13, for Win64 (x86_64)
 --
 -- Host: localhost    Database: bxc
 -- ------------------------------------------------------
--- Server version	5.6.17
+-- Server version	5.6.13
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,14 +23,14 @@ DROP TABLE IF EXISTS `group_access`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_access` (
-  `accessID` int(11) NOT NULL AUTO_INCREMENT,
-  `userID` int(11) DEFAULT NULL,
-  `groupID` int(11) DEFAULT NULL,
-  `access_level` int(11) DEFAULT NULL,
-  `can_write` int(11) DEFAULT NULL,
-  `can_read` int(11) DEFAULT NULL,
-  `can_download` int(11) DEFAULT NULL,
-  `can_upload` int(11) DEFAULT NULL,
+  `accessID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userID` bigint(20) DEFAULT NULL,
+  `groupID` tinyint(4) DEFAULT NULL,
+  `access_level` tinyint(4) DEFAULT NULL,
+  `can_write` tinyint(4) DEFAULT NULL,
+  `can_read` tinyint(4) DEFAULT NULL,
+  `can_download` tinyint(4) DEFAULT NULL,
+  `can_upload` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`accessID`),
   KEY `userID` (`userID`),
   KEY `groupID` (`groupID`),
@@ -49,21 +49,21 @@ LOCK TABLES `group_access` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `legalRP`
+-- Table structure for table `legalrp`
 --
 
-DROP TABLE IF EXISTS `legalRP`;
+DROP TABLE IF EXISTS `legalrp`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `legalRP` (
+CREATE TABLE `legalrp` (
   `rpID` int(11) NOT NULL AUTO_INCREMENT,
   `rpFirstName` varchar(255) DEFAULT NULL,
   `rpLastName` varchar(255) DEFAULT NULL,
   `relation` varchar(255) DEFAULT NULL,
-  `capital` varchar(255) DEFAULT NULL,
-  `capitalNumber` varchar(255) DEFAULT NULL,
-  `percent` varchar(255) DEFAULT NULL,
-  `organizationID` int(11) DEFAULT NULL,
+  `capitalType` varchar(255) DEFAULT NULL,
+  `capitalNumber` bigint(20) DEFAULT NULL,
+  `percent` tinyint(4) DEFAULT NULL,
+  `organizationID` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`rpID`),
   KEY `organizationID` (`organizationID`),
   CONSTRAINT `legalrp_ibfk_1` FOREIGN KEY (`organizationID`) REFERENCES `organization` (`organizationID`)
@@ -71,12 +71,12 @@ CREATE TABLE `legalRP` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `legalRP`
+-- Dumping data for table `legalrp`
 --
 
-LOCK TABLES `legalRP` WRITE;
-/*!40000 ALTER TABLE `legalRP` DISABLE KEYS */;
-/*!40000 ALTER TABLE `legalRP` ENABLE KEYS */;
+LOCK TABLES `legalrp` WRITE;
+/*!40000 ALTER TABLE `legalrp` DISABLE KEYS */;
+/*!40000 ALTER TABLE `legalrp` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -87,14 +87,14 @@ DROP TABLE IF EXISTS `organ_access`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `organ_access` (
-  `accessID` int(11) NOT NULL AUTO_INCREMENT,
-  `userID` int(11) DEFAULT NULL,
-  `organizationID` int(11) DEFAULT NULL,
-  `access_level` int(11) DEFAULT NULL,
-  `can_write` int(11) DEFAULT NULL,
-  `can_read` int(11) DEFAULT NULL,
-  `can_download` int(11) DEFAULT NULL,
-  `can_upload` int(11) DEFAULT NULL,
+  `accessID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userID` bigint(20) DEFAULT NULL,
+  `organizationID` bigint(20) DEFAULT NULL,
+  `access_level` tinyint(4) DEFAULT NULL,
+  `can_write` tinyint(4) DEFAULT NULL,
+  `can_read` tinyint(4) DEFAULT NULL,
+  `can_download` tinyint(4) DEFAULT NULL,
+  `can_upload` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`accessID`),
   KEY `userID` (`userID`),
   KEY `organizationID` (`organizationID`),
@@ -120,14 +120,14 @@ DROP TABLE IF EXISTS `organization`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `organization` (
-  `organizationID` int(11) NOT NULL AUTO_INCREMENT,
-  `groupID` int(11) DEFAULT NULL,
+  `organizationID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `groupID` tinyint(4) DEFAULT NULL,
   `orgName` varchar(255) DEFAULT NULL,
   `regTime` date DEFAULT NULL,
   `regLocation` varchar(1000) DEFAULT NULL,
   `prodLocation` varchar(1000) DEFAULT NULL,
-  `regCapital` varchar(1000) DEFAULT NULL,
-  `appendum` varchar(10000) DEFAULT NULL,
+  `regCapital` bigint(20) DEFAULT NULL,
+  `appendum` text,
   PRIMARY KEY (`organizationID`),
   KEY `groupID` (`groupID`),
   CONSTRAINT `organization_ibfk_1` FOREIGN KEY (`groupID`) REFERENCES `user_group` (`groupID`)
@@ -144,6 +144,158 @@ LOCK TABLES `organization` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `t_loan`
+--
+
+DROP TABLE IF EXISTS `t_loan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_loan` (
+  `loanID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `bankID` bigint(20) DEFAULT NULL,
+  `organizationID` bigint(20) DEFAULT NULL,
+  `loanType` varchar(1000) DEFAULT NULL,
+  `startTime` date DEFAULT NULL,
+  `endTime` date DEFAULT NULL,
+  `total` bigint(20) DEFAULT NULL,
+  `paid` bigint(20) DEFAULT NULL,
+  `residue` bigint(20) DEFAULT NULL,
+  `interest` tinyint(4) DEFAULT NULL,
+  `mortgageType` varchar(1000) DEFAULT NULL,
+  `loanDocID` bigint(20) DEFAULT NULL,
+  `insuranceID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`loanID`),
+  KEY `bankID` (`bankID`),
+  KEY `organizationID` (`organizationID`),
+  KEY `loanDocID` (`loanDocID`),
+  KEY `insuranceID` (`insuranceID`),
+  CONSTRAINT `t_loan_ibfk_1` FOREIGN KEY (`bankID`) REFERENCES `organization` (`organizationID`),
+  CONSTRAINT `t_loan_ibfk_2` FOREIGN KEY (`organizationID`) REFERENCES `organization` (`organizationID`),
+  CONSTRAINT `t_loan_ibfk_3` FOREIGN KEY (`loanDocID`) REFERENCES `t_loan_doc` (`docID`),
+  CONSTRAINT `t_loan_ibfk_4` FOREIGN KEY (`insuranceID`) REFERENCES `t_loan_insurance` (`insuranceID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_loan`
+--
+
+LOCK TABLES `t_loan` WRITE;
+/*!40000 ALTER TABLE `t_loan` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_loan` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_loan_doc`
+--
+
+DROP TABLE IF EXISTS `t_loan_doc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_loan_doc` (
+  `docID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `doc_Name` varchar(1000) DEFAULT NULL,
+  `doc_Size` int(11) DEFAULT NULL,
+  `doc_Date` datetime DEFAULT NULL,
+  `doc_URL` varchar(1000) DEFAULT NULL,
+  `loanID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`docID`),
+  KEY `loanID` (`loanID`),
+  CONSTRAINT `t_loan_doc_ibfk_1` FOREIGN KEY (`loanID`) REFERENCES `t_loan` (`loanID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_loan_doc`
+--
+
+LOCK TABLES `t_loan_doc` WRITE;
+/*!40000 ALTER TABLE `t_loan_doc` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_loan_doc` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_loan_insurance`
+--
+
+DROP TABLE IF EXISTS `t_loan_insurance`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_loan_insurance` (
+  `insuranceID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `companyID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`insuranceID`),
+  KEY `companyID` (`companyID`),
+  CONSTRAINT `t_loan_insurance_ibfk_1` FOREIGN KEY (`companyID`) REFERENCES `organization` (`organizationID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_loan_insurance`
+--
+
+LOCK TABLES `t_loan_insurance` WRITE;
+/*!40000 ALTER TABLE `t_loan_insurance` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_loan_insurance` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_message`
+--
+
+DROP TABLE IF EXISTS `t_message`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_message` (
+  `M_ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `senderID` bigint(20) DEFAULT NULL,
+  `receiverID` bigint(20) DEFAULT NULL,
+  `sendTime` datetime DEFAULT NULL,
+  `ReadFlag` tinyint(4) DEFAULT NULL,
+  `M_Text_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`M_ID`),
+  KEY `senderID` (`senderID`),
+  KEY `receiverID` (`receiverID`),
+  KEY `M_Text_ID` (`M_Text_ID`),
+  CONSTRAINT `t_message_ibfk_1` FOREIGN KEY (`senderID`) REFERENCES `users` (`userID`),
+  CONSTRAINT `t_message_ibfk_2` FOREIGN KEY (`receiverID`) REFERENCES `users` (`userID`),
+  CONSTRAINT `t_message_ibfk_3` FOREIGN KEY (`M_Text_ID`) REFERENCES `t_messagetext` (`M_Text_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_message`
+--
+
+LOCK TABLES `t_message` WRITE;
+/*!40000 ALTER TABLE `t_message` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_message` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_messagetext`
+--
+
+DROP TABLE IF EXISTS `t_messagetext`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_messagetext` (
+  `M_Text_ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `MessageText` text,
+  PRIMARY KEY (`M_Text_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_messagetext`
+--
+
+LOCK TABLES `t_messagetext` WRITE;
+/*!40000 ALTER TABLE `t_messagetext` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_messagetext` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user_group`
 --
 
@@ -151,7 +303,7 @@ DROP TABLE IF EXISTS `user_group`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_group` (
-  `groupID` int(11) NOT NULL AUTO_INCREMENT,
+  `groupID` tinyint(4) NOT NULL AUTO_INCREMENT,
   `groupName` varchar(255) NOT NULL,
   PRIMARY KEY (`groupID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -174,12 +326,12 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
-  `userID` int(11) NOT NULL AUTO_INCREMENT,
+  `userID` bigint(20) NOT NULL AUTO_INCREMENT,
   `LastName` varchar(255) NOT NULL,
   `FirstName` varchar(255) DEFAULT NULL,
   `Address` varchar(1000) DEFAULT NULL,
-  `organizationID` int(11) DEFAULT NULL,
-  `groupID` int(11) DEFAULT NULL,
+  `organizationID` bigint(20) DEFAULT NULL,
+  `groupID` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`userID`),
   KEY `groupID` (`groupID`),
   KEY `organizationID` (`organizationID`),
@@ -206,4 +358,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-01-15 14:48:16
+-- Dump completed on 2015-01-18 20:55:08
