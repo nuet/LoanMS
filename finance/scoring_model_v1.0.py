@@ -258,3 +258,14 @@ if __name__ == "__main__":
 
         main()
 
+
+'''
+The following is only for testing the call of function get_score(), until v2.0 released.
+'''
+def get_score():
+    retun 3.1415926535
+
+
+
+
+
