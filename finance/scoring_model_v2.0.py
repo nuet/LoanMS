@@ -108,7 +108,7 @@ def get_data():
                         # t_balance_sheet
                         arr.append(row['grossAssets'])
                         arr.append(row['floatingAssets'])
-                        arr.append(row['monetaryCaptial'])
+                        arr.append(row['monetaryCapital'])
                         arr.append(row['liquidInvestment'])
                         arr.append(row['notesReceivables'])
                         arr.append(row['AccountsReceivables'])
