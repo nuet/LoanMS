@@ -102,13 +102,11 @@ CREATE TABLE `organization` (
   `contactEmail` varchar(1000) DEFAULT NULL,
   `contactPhone` varchar(1000) DEFAULT NULL,
   `appendum` text,
-  `organizationKey` int(11) NOT NULL,
-  `credit` int(11) DEFAULT NULL,
-  `credit_date` date DEFAULT NULL,
+  `organizationKey` varchar(1000) NOT NULL,
   PRIMARY KEY (`organizationID`),
   KEY `groupID` (`groupID`),
   CONSTRAINT `organization_ibfk_1` FOREIGN KEY (`groupID`) REFERENCES `user_group` (`groupID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -117,7 +115,7 @@ CREATE TABLE `organization` (
 
 LOCK TABLES `organization` WRITE;
 /*!40000 ALTER TABLE `organization` DISABLE KEYS */;
-INSERT INTO `organization` VALUES (2,1,'bxc','2014-01-01','汉中门','汉中门',10000,'11111','工信部','周全','quzhou@indiana.edu','812','你好',12121,NULL,NULL);
+INSERT INTO `organization` VALUES (2,1,'bxc','2014-01-01','汉中门','汉中门',10000,'11111','工信部','周全','quzhou@indiana.edu','8123615159','你好111','12121'),(4,1,'滨新城','1983-05-07','南京','南京',100000,'1212121','中宣部','周全','quzhou@indiana.edu','7854777369','121212','63cad1ad-2e28-43cd-b8b7-6405599adc8d'),(5,2,'中国人民银行','1983-05-07','中国','中国',100000,'100000','中国','陈宝强','baoqiao@163.com','111111','111111','3f91290a-7dd5-4121-9926-2cd70ccaf4c8'),(6,3,'中国人寿保险','1983-05-07','中国','中国',1100000,'1111','中国','丁一','dingyi@163.co','1111','1111','2eb56d1c-0dae-4e8b-90e1-37bc30b43fe4');
 /*!40000 ALTER TABLE `organization` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -132,9 +130,9 @@ CREATE TABLE `t_balance_sheet` (
   `sheetID` bigint(20) NOT NULL AUTO_INCREMENT,
   `organizationID` bigint(20) NOT NULL,
   `sheetDate` date DEFAULT NULL,
-  `grossAssets` double NO NULL,
-  `floatingAssets` double NOT NULL,
-  `monetaryCaptial` double DEFAULT NULL,
+  `grossAssets` double DEFAULT NULL,
+  `floatingAssets` double DEFAULT NULL,
+  `monetaryCapital` double DEFAULT NULL,
   `liquidInvestment` double DEFAULT NULL,
   `notesReceivables` double DEFAULT NULL,
   `AccountsReceivables` double DEFAULT NULL,
@@ -146,7 +144,7 @@ CREATE TABLE `t_balance_sheet` (
   `deferredExpenses` double DEFAULT NULL,
   `otherfloatingAssets` double DEFAULT NULL,
   `nonliquidAssets` double DEFAULT NULL,
-  `longequityInvest` double NO NULL,
+  `longequityInvest` double DEFAULT NULL,
   `fixedAssetsTotal` double DEFAULT NULL,
   `fixedAssetsOrigin` double DEFAULT NULL,
   `fixedAssetsNet` double DEFAULT NULL,
@@ -154,7 +152,7 @@ CREATE TABLE `t_balance_sheet` (
   `intangibleAssets` double DEFAULT NULL,
   `longdeferredExpenses` double DEFAULT NULL,
   `othernonliquidInvest` double DEFAULT NULL,
-  `grossDebt` double NO NULL,
+  `grossDebt` double DEFAULT NULL,
   `currentDebt` double DEFAULT NULL,
   `shortLoan` double DEFAULT NULL,
   `notesPayables` double DEFAULT NULL,
@@ -163,7 +161,7 @@ CREATE TABLE `t_balance_sheet` (
   `taxPayables` double DEFAULT NULL,
   `otherPayables` double DEFAULT NULL,
   `salaries` double DEFAULT NULL,
-  `dividendsPayables` double NO NULL,
+  `dividendsPayables` double DEFAULT NULL,
   `otherfloatingDebt` double DEFAULT NULL,
   `longLoan` double DEFAULT NULL,
   `othernonfloatingDebt` double DEFAULT NULL,
@@ -178,12 +176,15 @@ CREATE TABLE `t_balance_sheet` (
   `quickRatio` double DEFAULT NULL,
   `submissionUser` bigint(20) DEFAULT NULL,
   `file_url` varchar(1000) DEFAULT NULL,
+  `startDate` date DEFAULT NULL,
+  `endDate` date DEFAULT NULL,
+  `nonfloatingDebt` double DEFAULT NULL,
   PRIMARY KEY (`sheetID`),
   KEY `organizationID` (`organizationID`),
   KEY `submissionUser` (`submissionUser`),
   CONSTRAINT `t_balance_sheet_ibfk_1` FOREIGN KEY (`organizationID`) REFERENCES `organization` (`organizationID`),
   CONSTRAINT `t_balance_sheet_ibfk_2` FOREIGN KEY (`submissionUser`) REFERENCES `users` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,7 +193,35 @@ CREATE TABLE `t_balance_sheet` (
 
 LOCK TABLES `t_balance_sheet` WRITE;
 /*!40000 ALTER TABLE `t_balance_sheet` DISABLE KEYS */;
+INSERT INTO `t_balance_sheet` VALUES (1,2,'2015-02-10',37199.26,21438.73,0,0,1050,3672.37,2768.97,0,201.8,0,11126.8,0,0,0,0,12180.39,13647.99,12180.39,0,3580.14,0,0,18004.74,18004.74,9750,3500,1894.32,1728.77,60.58,1000,71.06,0,0,0,0,19194.52,11800,0,0,0,37199.26,48.4,1.19,0.57,1,NULL,'2015-01-07','2015-02-07',0);
 /*!40000 ALTER TABLE `t_balance_sheet` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_credit`
+--
+
+DROP TABLE IF EXISTS `t_credit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_credit` (
+  `creditID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `credit` int(11) NOT NULL,
+  `creditDate` date NOT NULL,
+  `organizationID` bigint(20) NOT NULL,
+  PRIMARY KEY (`creditID`),
+  KEY `organizationID` (`organizationID`),
+  CONSTRAINT `t_credit_ibfk_1` FOREIGN KEY (`organizationID`) REFERENCES `organization` (`organizationID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_credit`
+--
+
+LOCK TABLES `t_credit` WRITE;
+/*!40000 ALTER TABLE `t_credit` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_credit` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -206,7 +235,7 @@ CREATE TABLE `t_income_statement` (
   `statementID` bigint(20) NOT NULL AUTO_INCREMENT,
   `organizationID` bigint(20) NOT NULL,
   `statementDate` date DEFAULT NULL,
-  `mainIncome` double NO NULL,
+  `mainIncome` double DEFAULT NULL,
   `mainCost` double DEFAULT NULL,
   `salesTax` double DEFAULT NULL,
   `mainProfit` double DEFAULT NULL,
@@ -222,18 +251,20 @@ CREATE TABLE `t_income_statement` (
   `otherCost` double DEFAULT NULL,
   `profitTotal` double DEFAULT NULL,
   `incomeTax` double DEFAULT NULL,
-  `netProfit` double NOT NULL,
+  `netProfit` double DEFAULT NULL,
   `grossProfit` double DEFAULT NULL,
   `netMargin` double DEFAULT NULL,
   `grossMargin` double DEFAULT NULL,
   `submissionUser` bigint(20) DEFAULT NULL,
   `file_url` varchar(1000) DEFAULT NULL,
+  `startDate` date DEFAULT NULL,
+  `endDate` date DEFAULT NULL,
   PRIMARY KEY (`statementID`),
   KEY `organizationID` (`organizationID`),
   KEY `submissionUser` (`submissionUser`),
   CONSTRAINT `t_income_statement_ibfk_1` FOREIGN KEY (`organizationID`) REFERENCES `organization` (`organizationID`),
   CONSTRAINT `t_income_statement_ibfk_2` FOREIGN KEY (`submissionUser`) REFERENCES `users` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -242,6 +273,7 @@ CREATE TABLE `t_income_statement` (
 
 LOCK TABLES `t_income_statement` WRITE;
 /*!40000 ALTER TABLE `t_income_statement` DISABLE KEYS */;
+INSERT INTO `t_income_statement` VALUES (2,2,'2015-02-10',36888.65,31839.11,122.89,4926.65,31839.11,413.07,479,766.87,0,0,3267.71,0,0,0,3267.71,816.93,2450.78,0,13.69,6.64,1,NULL,'2015-01-07','2015-02-07');
 /*!40000 ALTER TABLE `t_income_statement` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -294,18 +326,15 @@ CREATE TABLE `t_loan` (
   `endTime` date DEFAULT NULL,
   `total` double DEFAULT NULL,
   `mortgageType` varchar(1000) DEFAULT NULL,
-  `loanDocID` bigint(20) DEFAULT NULL,
   `insuranceID` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`loanID`),
   KEY `bankID` (`bankID`),
   KEY `organizationID` (`organizationID`),
-  KEY `loanDocID` (`loanDocID`),
   KEY `insuranceID` (`insuranceID`),
   CONSTRAINT `t_loan_ibfk_1` FOREIGN KEY (`bankID`) REFERENCES `organization` (`organizationID`),
   CONSTRAINT `t_loan_ibfk_2` FOREIGN KEY (`organizationID`) REFERENCES `organization` (`organizationID`),
-  CONSTRAINT `t_loan_ibfk_3` FOREIGN KEY (`loanDocID`) REFERENCES `t_loan_doc` (`docID`),
-  CONSTRAINT `t_loan_ibfk_4` FOREIGN KEY (`insuranceID`) REFERENCES `t_loan_insurance` (`insuranceID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `t_loan_ibfk_3` FOREIGN KEY (`insuranceID`) REFERENCES `organization` (`organizationID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -314,6 +343,7 @@ CREATE TABLE `t_loan` (
 
 LOCK TABLES `t_loan` WRITE;
 /*!40000 ALTER TABLE `t_loan` DISABLE KEYS */;
+INSERT INTO `t_loan` VALUES (2,5,2,'e贷通','1983-05-07','1984-05-07',10000,'混合',6);
 /*!40000 ALTER TABLE `t_loan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -327,6 +357,8 @@ DROP TABLE IF EXISTS `t_loan_doc`;
 CREATE TABLE `t_loan_doc` (
   `docID` bigint(20) NOT NULL AUTO_INCREMENT,
   `doc_URL` varchar(1000) DEFAULT NULL,
+  `docDate` date DEFAULT NULL,
+  `docName` varchar(1000) NOT NULL,
   `loanID` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`docID`),
   KEY `loanID` (`loanID`),
@@ -359,7 +391,7 @@ CREATE TABLE `t_loan_fee` (
   PRIMARY KEY (`feeID`),
   KEY `loanID` (`loanID`),
   CONSTRAINT `t_loan_fee_ibfk_1` FOREIGN KEY (`loanID`) REFERENCES `t_loan` (`loanID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -368,6 +400,7 @@ CREATE TABLE `t_loan_fee` (
 
 LOCK TABLES `t_loan_fee` WRITE;
 /*!40000 ALTER TABLE `t_loan_fee` DISABLE KEYS */;
+INSERT INTO `t_loan_fee` VALUES (1,2,2000,'2015-02-15','2015-02-10'),(2,2,2000,'2015-01-15','2015-01-10');
 /*!40000 ALTER TABLE `t_loan_fee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -380,10 +413,10 @@ DROP TABLE IF EXISTS `t_loan_insurance`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `t_loan_insurance` (
   `insuranceID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `companyID` bigint(20) DEFAULT NULL,
+  `loanID` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`insuranceID`),
-  KEY `companyID` (`companyID`),
-  CONSTRAINT `t_loan_insurance_ibfk_1` FOREIGN KEY (`companyID`) REFERENCES `organization` (`organizationID`)
+  KEY `loanID` (`loanID`),
+  CONSTRAINT `t_loan_insurance_ibfk_1` FOREIGN KEY (`loanID`) REFERENCES `t_loan` (`loanID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -413,7 +446,7 @@ CREATE TABLE `t_loan_mortgage` (
   PRIMARY KEY (`mortgageID`),
   KEY `loanID` (`loanID`),
   CONSTRAINT `t_loan_mortgage_ibfk_1` FOREIGN KEY (`loanID`) REFERENCES `t_loan` (`loanID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -422,6 +455,7 @@ CREATE TABLE `t_loan_mortgage` (
 
 LOCK TABLES `t_loan_mortgage` WRITE;
 /*!40000 ALTER TABLE `t_loan_mortgage` DISABLE KEYS */;
+INSERT INTO `t_loan_mortgage` VALUES (1,2,'房屋抵押','房产价值：160万，地址：南京','2014-05-07','2020-05-07'),(2,2,'信用抵押','企业信用抵押','2014-05-07','2019-05-07');
 /*!40000 ALTER TABLE `t_loan_mortgage` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -441,7 +475,7 @@ CREATE TABLE `t_loan_payment` (
   PRIMARY KEY (`paymentID`),
   KEY `loanID` (`loanID`),
   CONSTRAINT `t_loan_payment_ibfk_1` FOREIGN KEY (`loanID`) REFERENCES `t_loan` (`loanID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -450,6 +484,7 @@ CREATE TABLE `t_loan_payment` (
 
 LOCK TABLES `t_loan_payment` WRITE;
 /*!40000 ALTER TABLE `t_loan_payment` DISABLE KEYS */;
+INSERT INTO `t_loan_payment` VALUES (4,2,10000,'2015-02-07','2015-02-06'),(5,2,10000,'2015-01-07','2015-01-06'),(6,2,9000,'2014-12-07','2014-12-06');
 /*!40000 ALTER TABLE `t_loan_payment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -627,8 +662,7 @@ DROP TABLE IF EXISTS `t_organization_legalrp`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `t_organization_legalrp` (
   `rpID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `rpFirstName` varchar(255) DEFAULT NULL,
-  `rpLastName` varchar(255) DEFAULT NULL,
+  `rpName` varchar(255) DEFAULT NULL,
   `relation` varchar(255) DEFAULT NULL,
   `capitalType` varchar(255) DEFAULT NULL,
   `capitalTotal` double DEFAULT NULL,
@@ -637,10 +671,11 @@ CREATE TABLE `t_organization_legalrp` (
   `endDate` date DEFAULT NULL,
   `percent` tinyint(4) DEFAULT NULL,
   `organizationID` bigint(20) DEFAULT NULL,
+  `rpTrue` tinyint(4) NOT NULL,
   PRIMARY KEY (`rpID`),
   KEY `organizationID` (`organizationID`),
   CONSTRAINT `legalrp_ibfk_1` FOREIGN KEY (`organizationID`) REFERENCES `organization` (`organizationID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -649,6 +684,7 @@ CREATE TABLE `t_organization_legalrp` (
 
 LOCK TABLES `t_organization_legalrp` WRITE;
 /*!40000 ALTER TABLE `t_organization_legalrp` DISABLE KEYS */;
+INSERT INTO `t_organization_legalrp` VALUES (1,'周全','总经理','现金',110000,NULL,'1983-05-07','1984-05-07',51,2,1),(2,'顾雨凡','总经理','现金',110000,NULL,'1983-05-07','1985-05-07',49,2,2);
 /*!40000 ALTER TABLE `t_organization_legalrp` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -736,7 +772,7 @@ CREATE TABLE `users` (
   `groupID` tinyint(4) DEFAULT NULL,
   `username` varchar(100) NOT NULL,
   `password` varchar(1000) DEFAULT NULL,
-  `gender` varchar(1000) DEFAULT NULL,
+  `gender` tinyint(4) DEFAULT NULL,
   `emergencyPhone` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`userID`),
   UNIQUE KEY `username` (`username`),
@@ -753,7 +789,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'周','全','南京','南京','身份证',123,'averyczech@hotmail.com','8123615159','顾雨凡','quzhou@indiana.edu',2,1,'quzhou','1qaz2wsx','男','8123615159');
+INSERT INTO `users` VALUES (1,'周','全','南京','南京','身份证',123,'averyczech@hotmail.com','8123615159','顾雨凡','quzhou@indiana.edu',2,1,'quzhou','1qaz2wsx',1,'8123615159');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -766,4 +802,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-08  2:27:36
+-- Dump completed on 2015-02-09 22:10:14
